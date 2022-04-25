@@ -11,3 +11,11 @@
 - Spring Security
 - JPA
 - Unit Testing
+
+3.Spring JPA, JSON Web Tokens
+- JPA (Foreign key)
+- JWT (JSON Web Tokens)
+
+4.Email, Scheduler
+- Email
+- Job Scheduler
