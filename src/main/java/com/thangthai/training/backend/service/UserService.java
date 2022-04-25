@@ -26,6 +26,10 @@ public class UserService {
         return repository.findByEmail(email);
     }
 
+    public Optional<User> findById(String id){
+        return repository.findById(id);
+    }
+
     public User updateName(String id, String name) throws BaseException {
         Optional<User> opt = repository.findById(id);
         if ( opt.isEmpty() ) {
