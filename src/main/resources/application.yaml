@@ -1,4 +1,15 @@
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: auto.thangthai
+    password: xvrxejaprtejbfew
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,4 +28,6 @@ app:
   token:
     secret: m#MySecretGGWP2022
     issuer: BackendService
+    email:
+      from: auto.thangthai@gmail.com
 
