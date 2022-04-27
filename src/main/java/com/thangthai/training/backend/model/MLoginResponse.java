@@ -1,2 +1,10 @@
-package com.thangthai.training.backend.model;public class MLoginResponse {
+package com.thangthai.training.backend.model;
+
+import lombok.Data;
+
+@Data
+public class MLoginResponse {
+
+    private String token;
+
 }

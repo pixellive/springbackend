@@ -15,6 +15,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,8 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/actuator/**",
             "/user/register",
             "/user/login",
-            "/socket/**",
-            "/chat/**" // TODO: remove from config (Security reason)
+            "/socket/**"
     };
 
     public SecurityConfig(TokenService tokenService) {
@@ -46,14 +46,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.cors().disable().csrf().disable()
+
+        /*http.cors().disable().csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests().antMatchers(PUBLIC).anonymous()
+                .anyRequest().authenticated()
+                .and().apply(new TokenFilterConfiguerer(tokenService));*/
+
+        /**
+         * Fixed set cors: Cross Origin Resource Sharing
+         * For Spring Boot version 2.4.0++
+         */
+        http.cors(config -> {
+                    CorsConfiguration cors = new CorsConfiguration();
+                    cors.setAllowCredentials(true);
+                    cors.setAllowedOriginPatterns(Collections.singletonList("http://*"));
+                    cors.addAllowedHeader("*");
+                    cors.addAllowedMethod("GET");
+                    cors.addAllowedMethod("POST");
+                    cors.addAllowedMethod("PUT");
+                    cors.addAllowedMethod("DELETE");
+                    cors.addAllowedMethod("OPTIONS");
+
+                    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                    source.registerCorsConfiguration("/**", cors);
+
+                    config.configurationSource(source);
+                }).csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().antMatchers(PUBLIC).anonymous()
                 .anyRequest().authenticated()
                 .and().apply(new TokenFilterConfiguerer(tokenService));
     }
 
-    @Bean
+    //Discard
+    /*@Bean
     public CorsFilter corsFilter(){
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -68,5 +95,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         config.addAllowedMethod("DELETE");
         source.registerCorsConfiguration("/**",config);
         return new CorsFilter(source);
-    }
+    }*/
 }

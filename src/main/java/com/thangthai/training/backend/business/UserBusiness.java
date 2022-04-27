@@ -7,6 +7,7 @@ import com.thangthai.training.backend.exception.FileException;
 import com.thangthai.training.backend.exception.UserException;
 import com.thangthai.training.backend.mapper.UserMapper;
 import com.thangthai.training.backend.model.MLoginRequest;
+import com.thangthai.training.backend.model.MLoginResponse;
 import com.thangthai.training.backend.model.MRegisterRequest;
 import com.thangthai.training.backend.model.MRegisterResponse;
 import com.thangthai.training.backend.service.TokenService;
@@ -38,7 +39,7 @@ public class UserBusiness {
         this.userMapper = userMapper;
     }
 
-    public String login(MLoginRequest request) throws BaseException {
+    public MLoginResponse login(MLoginRequest request) throws BaseException {
 
         // validate request
 
@@ -53,7 +54,9 @@ public class UserBusiness {
             throw UserException.loginFailPasswordIncorrect();
         }
 
-        return tokenService.tokenize(user);
+        MLoginResponse response = new MLoginResponse();
+        response.setToken(tokenService.tokenize(user));
+        return response;
     }
 
     public String refreshToken() throws BaseException {

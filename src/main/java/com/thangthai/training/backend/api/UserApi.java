@@ -3,10 +3,7 @@ package com.thangthai.training.backend.api;
 import com.thangthai.training.backend.business.UserBusiness;
 import com.thangthai.training.backend.entity.User;
 import com.thangthai.training.backend.exception.BaseException;
-import com.thangthai.training.backend.model.MLoginRequest;
-import com.thangthai.training.backend.model.MRegisterRequest;
-import com.thangthai.training.backend.model.MRegisterResponse;
-import com.thangthai.training.backend.model.TestResponse;
+import com.thangthai.training.backend.model.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +23,8 @@ public class UserApi {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody MLoginRequest request) throws BaseException {
-        String response = business.login(request);
+    public ResponseEntity<MLoginResponse> login(@RequestBody MLoginRequest request) throws BaseException {
+        MLoginResponse response = business.login(request);
         return ResponseEntity.ok(response);
     }
 
