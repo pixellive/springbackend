@@ -26,6 +26,16 @@ Source code from Anucha Phosong portfolio.
 - Websocket
 - Angular 11 (Frontend)
 
-## EP.6 Bootstrap, Angular Material
-- Bootstrap
-- Security for Frontend(Router Link/], Router Active,Authentication Guards, HttpClient Interceptor)
+## EP.6 Bootstrap, Security for Frontend
+- CSS (Bootstrap,)
+- Security (Guard)
+- HTTP Interceptor
+- Routing
+
+## EP.7 Kafka
+- Basic Queue with Kafka
+- Kafka Producer
+- Kafka Consumer
+- Custom Kafka Producer & Consumer
+- Microservices (Backend & Email)
+- Activation Email

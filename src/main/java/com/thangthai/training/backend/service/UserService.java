@@ -4,13 +4,18 @@ import com.thangthai.training.backend.entity.User;
 import com.thangthai.training.backend.exception.BaseException;
 import com.thangthai.training.backend.exception.UserException;
 import com.thangthai.training.backend.repository.UserRepository;
+import com.thangthai.training.backend.util.SecurityUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Log4j2
 public class UserService {
 
     private final UserRepository repository;
@@ -28,6 +33,14 @@ public class UserService {
 
     public Optional<User> findById(String id){
         return repository.findById(id);
+    }
+
+    public Optional<User> findByToken(String token){
+        return repository.findByToken(token);
+    }
+
+    public User update(User user) {
+        return repository.save(user);
     }
 
     public User updateName(String id, String name) throws BaseException {
@@ -50,7 +63,7 @@ public class UserService {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
-    public User create(String email, String password, String name) throws BaseException {
+    public User create(String email, String password, String name, String token, Date tokenExpireDate) throws BaseException {
         // validate
         if (Objects.isNull(email)) {
             throw UserException.createEmailNull();
@@ -74,6 +87,8 @@ public class UserService {
         entity.setEmail(email);
         entity.setPassword(passwordEncoder.encode(password));
         entity.setName(name);
+        entity.setToken(token);
+        entity.setTokenExpire(tokenExpireDate);//nextMinute(30)
 
         return repository.save(entity);
     }

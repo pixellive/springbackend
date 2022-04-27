@@ -1,9 +1,9 @@
 package com.thangthai.training.backend.api;
 
 import com.thangthai.training.backend.business.UserBusiness;
-import com.thangthai.training.backend.entity.User;
 import com.thangthai.training.backend.exception.BaseException;
 import com.thangthai.training.backend.model.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +32,18 @@ public class UserApi {
     public ResponseEntity<MRegisterResponse> register(@RequestBody MRegisterRequest request) throws BaseException {
         MRegisterResponse response = business.register(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/activate")
+    public ResponseEntity<MActivateResponse> activate(@RequestBody MActivateRequest request) throws BaseException {
+        MActivateResponse response = business.activate(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/resend-activation-email")
+    public ResponseEntity<Void> activate(@RequestBody MResendActivationEmailRequest request) throws BaseException {
+        business.resendActivationEmail(request);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/refresh-token")

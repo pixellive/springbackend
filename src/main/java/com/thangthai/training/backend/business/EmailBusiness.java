@@ -2,27 +2,32 @@ package com.thangthai.training.backend.business;
 
 import com.thangthai.training.backend.exception.BaseException;
 import com.thangthai.training.backend.exception.EmailException;
-import com.thangthai.training.backend.service.EmailService;
+import com.thangthai.training.common.EmailRequest;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ResourceBundle;
 
 @Service
+@Log4j2
 public class EmailBusiness {
 
-    private final EmailService emailService;
+    private final KafkaTemplate<String, EmailRequest> kafkaEmailTemplate;
 
-    public EmailBusiness(EmailService emailService) {
-        this.emailService = emailService;
+    public EmailBusiness(KafkaTemplate<String, EmailRequest> kafkaEmailTemplate) {
+        this.kafkaEmailTemplate = kafkaEmailTemplate;
     }
 
     public void sendActivateUserEmail(String email, String name, String token) throws BaseException {
+
         // prepare content HTML
         String html = null;
         try {
@@ -31,14 +36,32 @@ public class EmailBusiness {
             throw EmailException.tamplateNotFound();
         }
 
+        log.info("Token: "+token);
+
         String finalLink = "http://localhost:4200/activate/" + token;
         html = html.replace("${P_NAME}", name);
-        html = html.replace("${LINK}", finalLink);
+        html = html.replace("${P_LINK}", finalLink);
 
-        // prepare subject
-        String subject = "Please activate your account";
+        // prepare email object
+        EmailRequest request = new EmailRequest();
+        request.setTo(email);
+        request.setSubject("Please activate your account");
+        request.setContent(html);
 
-        emailService.send(email, subject, html);
+        ListenableFuture<SendResult<String, EmailRequest>> future = kafkaEmailTemplate.send("activation-email", request);
+        future.addCallback(new ListenableFutureCallback<>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                log.error("Kafka send fail");
+                log.error(throwable);
+            }
+
+            @Override
+            public void onSuccess(SendResult<String, EmailRequest> result) {
+                log.info("Kafka send success");
+                log.info(result);
+            }
+        });
     }
 
     private String readEmailTemplate(String fileName) throws IOException {
