@@ -39,3 +39,11 @@ Source code from Anucha Phosong portfolio.
 - Custom Kafka Producer & Consumer
 - Microservices (Backend & Email)
 - Activation Email
+
+## EP.8 Redis, Frontend (Angular) : i18n
+- การรัน Redis ใน Local Environment
+- สร้าง Cache
+- แก้ไข Cache
+- ลบ Cache
+- Frontend (Angular) :  Activate Account (carry from EP 7)
+- Frontend (Angular) : i18n

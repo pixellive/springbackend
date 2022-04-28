@@ -22,6 +22,19 @@ public class UserApi {
         this.business = business;
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<MUserProfile> getMyUserProfile() throws BaseException {
+        MUserProfile response = business.getMyUserProfile();
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<MUserProfile> updateMyUserProfile(@RequestBody MUpdateUserProfileRequest request) throws BaseException {
+        MUserProfile response = business.updateMyUserProfile(request);
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("/login")
     public ResponseEntity<MLoginResponse> login(@RequestBody MLoginRequest request) throws BaseException {
         MLoginResponse response = business.login(request);
@@ -57,5 +70,13 @@ public class UserApi {
     public ResponseEntity<String> uploadProfilePicture(@RequestPart MultipartFile file) throws BaseException {
         String response = business.uploadProfilePicture(file);
         return ResponseEntity.ok(response);
+    }
+
+    // TODO: to be deleted
+    @DeleteMapping("/test-delete-my-account")
+    public ResponseEntity<Void> testDeleteMyAccount() throws BaseException {
+        business.testDeleteMyAccount();
+
+        return ResponseEntity.ok().build();
     }
 }
